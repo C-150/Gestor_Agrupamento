@@ -26,7 +26,6 @@ O sistema inclui as seguintes operações:
 * 📋 **Listar alunos** — apresenta todos os alunos organizados por turma
 * ✏️ **Atualizar aluno** — altera o nome de um aluno existente
 * 🗑️ **Remover aluno** — elimina um aluno do sistema
-* ⚡ **Inserção automática** — adiciona alunos de teste (1 a 5)
 
 ---
 
@@ -81,8 +80,6 @@ projeto/
 
 ---
 
-## 🔧 Funções Principais
-
 ### ➕ `criar_aluno()`
 
 * Solicita ID, nome e turma
@@ -110,13 +107,6 @@ projeto/
 
 * Remove um aluno com base no ID
 * Garante que o aluno existe antes de apagar
-
----
-
-### ⚡ `adicionar_1a5()`
-
-* Cria automaticamente 5 alunos de teste
-* Útil para demonstração rápida
 
 ---
 
