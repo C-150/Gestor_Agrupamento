@@ -1,25 +1,40 @@
-# 📚 Sistema de Gestão de Alunos
+---
 
-Este projeto é um sistema simples em Python para gerir alunos dentro de turmas. Permite criar, visualizar, atualizar e apagar alunos através de um menu interativo no terminal.
+ 📚 Sistema de Gestão de Alunos
+
+Este projeto consiste num sistema desenvolvido em Python que permite a gestão básica de alunos organizados por turmas. A aplicação funciona através de um menu interativo no terminal, permitindo realizar operações essenciais sobre os dados.
 
 ---
 
-## 🚀 Funcionalidades
+🎯 Objetivo
+
+O objetivo deste sistema é demonstrar conceitos fundamentais de programação, tais como:
+
+* Manipulação de dicionários
+* Organização de dados em estruturas hierárquicas
+* Criação de funções
+* Separação de responsabilidades em módulos (`aluno`, `turma`, `utils`, `main`)
+* Interação com o utilizador via terminal
+
+---
+
+ ⚙️ Funcionalidades
 
 O sistema inclui as seguintes operações:
 
-* ✅ Criar aluno
-* 📖 Listar alunos
-* ✏️ Atualizar dados de um aluno
-* ❌ Remover aluno
+* ➕ **Criar aluno** — adiciona um novo aluno a uma turma
+* 📋 **Listar alunos** — apresenta todos os alunos organizados por turma
+* ✏️ **Atualizar aluno** — altera o nome de um aluno existente
+* 🗑️ **Remover aluno** — elimina um aluno do sistema
+* ⚡ **Inserção automática** — adiciona alunos de teste (1 a 5)
 
 ---
 
-## 🗂️ Estrutura dos Dados
+ 🗂️ Estrutura dos Dados
 
-Os dados são armazenados em um dicionário chamado `turmas`, com a seguinte estrutura:
+Os dados são armazenados em memória através de um dicionário chamado `turmas`, com a seguinte estrutura:
 
-```
+```python
 turmas = {
     id_turma: {
         "id_turma": int,
@@ -36,83 +51,150 @@ turmas = {
 }
 ```
 
+🔎 **Explicação:**
+
+* Cada turma contém vários alunos
+* Cada aluno é identificado por um ID único
+* A relação aluno–turma é feita através do `id_turma`
+
 ---
 
-## 🧩 Funções Principais
+ 🧩 Organização do Projeto
 
-### `criar_aluno()`
+O projeto está dividido em vários ficheiros para melhor organização:
+
+```bash
+projeto/
+│
+├── main.py     # Interface e menu
+├── aluno.py    # Operações sobre alunos
+├── turma.py    # Dados das turmas
+└── utils.py    # Funções de validação
+```
+
+📌 **Vantagens desta divisão:**
+
+* Código mais limpo e organizado
+* Fácil manutenção
+* Reutilização de funções
+* Aproximação a projetos reais
+
+---
+
+## 🔧 Funções Principais
+
+### ➕ `criar_aluno()`
 
 * Solicita ID, nome e turma
-* Adiciona o aluno à turma existente
+* Valida a existência da turma
+* Adiciona o aluno ao sistema
 
-### `ler_alunos()`
+---
 
-* Mostra todos os alunos organizados por turma
+### 📋 `listar_alunos()`
 
-### `atualizar_aluno()`
+* Percorre todas as turmas
+* Mostra os alunos organizados
+* Indica quando não existem alunos
 
-* Permite alterar o nome de um aluno existente
+---
 
-### `apagar_aluno()`
+### ✏️ `atualizar_aluno()`
+
+* Procura o aluno pelo ID
+* Permite alterar o nome
+
+---
+
+### 🗑️ `apagar_aluno()`
 
 * Remove um aluno com base no ID
+* Garante que o aluno existe antes de apagar
 
-### `menu()`
+---
 
-* Interface principal com opções interativas
+### ⚡ `adicionar_1a5()`
 
-### `main()`
+* Cria automaticamente 5 alunos de teste
+* Útil para demonstração rápida
 
-* Função principal que inicia o programa
+---
+
+### 🧭 `menu()`
+
+* Apresenta opções ao utilizador
+* Controla o fluxo do programa
+
+---
+
+### ▶️ `main()`
+
+* Ponto de entrada do programa
+* Inicia o menu interativo
 
 ---
 
 ## ▶️ Como Executar
 
-1. Certifique-se de ter o Python instalado
-2. Guarde o código num ficheiro, por exemplo:
-   `gestao_alunos.py`
-3. Execute no terminal:
+1. Certifica-te de que tens o Python instalado
+2. Coloca os ficheiros na mesma pasta
+3. Executa no terminal:
 
-```
-python gestao_alunos.py
+```bash
+python main.py
 ```
 
 ---
 
-## 💡 Exemplo de Uso
+## 💡 Exemplo de Utilização
 
 ```
-MENU ALUNOS
+--- GESTOR ESCOLAR ---
 1 - Criar aluno
 2 - Ver alunos
 3 - Atualizar aluno
 4 - Apagar aluno
+5 - Adicionar alunos (1 a 5)
 0 - Sair
-Escolhe: 1
+Escolhe:
 ```
 
 ---
 
-## ⚠️ Notas
+## ⚠️ Limitações do Sistema
 
-* Apenas existe uma turma inicial (`1A`)
-* IDs devem ser únicos (não há validação automática)
-* Os dados não são guardados permanentemente (não usa ficheiros ou base de dados)
+* ❗ Dados não persistentes (perdem-se ao fechar o programa)
+* ❗ Apenas uma turma pré-definida
+* ❗ Validação básica de dados
+* ❗ Interface apenas em modo texto
 
 ---
 
-## 🔧 Melhorias Futuras
+## 🚀 Melhorias Futuras
 
-* Guardar dados em ficheiro (JSON ou base de dados)
-* Validar entradas do utilizador
-* Permitir criar novas turmas
-* Interface gráfica (GUI)
+* 💾 Guardar dados em ficheiros (JSON)
+* 🏫 Criar e gerir múltiplas turmas
+* 📝 Adicionar notas aos alunos
+* 🔐 Melhorar validação de dados
+* 🖥️ Criar interface gráfica (GUI)
+* 🌐 Evoluir para aplicação web
+
+---
+
+## 🧠 Conceitos Aplicados
+
+Este projeto utiliza conceitos importantes como:
+
+* Estruturas de dados (dicionários aninhados)
+* Modularização de código
+* Funções e reutilização
+* Entrada e saída de dados
+* Controlo de fluxo (loops e condições)
 
 ---
 
 ## 👨‍💻 Autor
 
-Diogo Fernandes
+**Diogo Fernandes**
 
 ---
