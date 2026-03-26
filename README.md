@@ -144,7 +144,6 @@ python main.py
 2 - Ver alunos
 3 - Atualizar aluno
 4 - Apagar aluno
-5 - Adicionar alunos (1 a 5)
 0 - Sair
 Escolhe:
 ```
