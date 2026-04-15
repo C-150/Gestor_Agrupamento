@@ -8,6 +8,7 @@ from aluno import criar_aluno, listar_alunos, atualizar_aluno, apagar_aluno
 
 # códigos de retorno
 SUCESSO = 200
+CREATE = 201
 ERRO_NAO_ENCONTRADO = 404
 CONFLITO = 409
 
@@ -43,7 +44,7 @@ def main():
 
             return_code = criar_aluno(numero, nome, email, telefone, data, id_turma)
 
-            if return_code[0] == SUCESSO:
+            if return_code[0] == CREATE:
                 print("Aluno criado com sucesso.")
             else:
                 print("Erro:", return_code[1])
