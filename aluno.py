@@ -47,7 +47,7 @@ def criar_aluno(numero, nome, email, telefone, data_nascimento, id_turma):
 
     turmas[id_turma]["alunos"][numero] = aluno
 
-    return 201, f"Aluno {nome} criado com sucesso"
+    return 201, aluno
 
 
 # ==============================
@@ -126,7 +126,7 @@ def atualizar_aluno(numero, novo_nome=None, novo_email=None):
                     return 400, "Email invalido"
                 turma["alunos"][numero]["email"] = novo_email
 
-            return 200, "Aluno atualizado com sucesso"
+            return 200, turma["alunos"][numero]
 
     return 404, "Aluno nao encontrado"
 
@@ -138,7 +138,8 @@ def apagar_aluno(numero):
 
     for turma in turmas.values():
         if numero in turma["alunos"]:
+            aluno_eliminado = turma["alunos"][numero]
             del turma["alunos"][numero]
-            return 200, "Aluno removido com sucesso"
+            return 200, aluno_eliminado
 
     return 404, "Aluno nao encontrado"
