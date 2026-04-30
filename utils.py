@@ -1,9 +1,5 @@
 # utils.py
 
-
-
-def _validar_texto(txt):
-    return isinstance(txt, str) and len(txt.strip()) > 0
     
 def _validar_id(id_curso):
     return isinstance(id_curso, str) and len(id_curso.strip()) > 0
