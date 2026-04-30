@@ -1,4 +1,14 @@
 # utils.py
+def _validar_id(id_curso):
+    return isinstance(id_curso, str) and len(id_curso.strip()) > 0
+
+
+def _validar_nome(nome):
+    return isinstance(nome, str) and len(nome.strip()) > 0
+
+
+def _validar_duracao(duracao):
+    return str(duracao).isdigit()
 
 def ler_int(mensagem):
     while True:
@@ -6,6 +16,7 @@ def ler_int(mensagem):
             return int(input(mensagem))
         except ValueError:
             print("Erro: insere um número válido.")
+            
 
 def ler_texto(mensagem):
     while True:
