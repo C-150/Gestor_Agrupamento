@@ -68,8 +68,6 @@ projeto/
 ├── main.py     # Interface e menu
 ├── aluno.py    # Operações sobre alunos
 ├── turma.py    # Dados das turmas
-├── Horario.py  # Horário das Turmas
-├── Curso.py    # Divisor de turmas apartir de curso
 └── utils.py    # Funções de validação
 ```
 
