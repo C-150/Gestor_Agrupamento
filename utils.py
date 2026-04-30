@@ -1,15 +1,15 @@
 # utils.py
 
     
-def _validar_id(id_curso):
+def validar_id(id_curso):
     return isinstance(id_curso, str) and len(id_curso.strip()) > 0
 
 
-def _validar_nome(nome):
+def validar_nome(nome):
     return isinstance(nome, str) and len(nome.strip()) > 0
 
 
-def _validar_duracao(duracao):
+def validar_duracao(duracao):
     return str(duracao).isdigit()
 
 def ler_int(mensagem):
