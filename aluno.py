@@ -2,20 +2,6 @@
 
 from turmas import turmas
 
-
-# ==============================
-# VALIDACOES
-# ==============================
-def _validar_nome(nome):
-    return isinstance(nome, str) and len(nome.strip()) > 0
-
-def _validar_email(email):
-    return isinstance(email, str) and "@" in email and "." in email
-
-def _validar_numero(numero):
-    return str(numero).isdigit()
-
-
 # ==============================
 # CREATE
 # ==============================
