@@ -13,7 +13,7 @@ O objetivo deste sistema é demonstrar conceitos fundamentais de programação, 
 * Manipulação de dicionários
 * Organização de dados em estruturas hierárquicas
 * Criação de funções
-* Separação de responsabilidades em módulos (`aluno`, `turma`, `utils`, `main`)
+* Separação de responsabilidades em módulos (`Curso`,`horário`,`aluno`, `turma`, `utils`, `main`)
 * Interação com o utilizador via terminal
 
 ---
@@ -68,6 +68,8 @@ projeto/
 ├── main.py     # Interface e menu
 ├── aluno.py    # Operações sobre alunos
 ├── turma.py    # Dados das turmas
+├── Horario.py  # Horário das Turmas
+├── Curso.py    # Divisor de turmas apartir de curso
 └── utils.py    # Funções de validação
 ```
 
@@ -156,17 +158,6 @@ Escolhe:
 * ❗ Apenas uma turma pré-definida
 * ❗ Validação básica de dados
 * ❗ Interface apenas em modo texto
-
----
-
-## 🚀 Melhorias Futuras
-
-* 💾 Guardar dados em ficheiros (JSON)
-* 🏫 Criar e gerir múltiplas turmas
-* 📝 Adicionar notas aos alunos
-* 🔐 Melhorar validação de dados
-* 🖥️ Criar interface gráfica (GUI)
-* 🌐 Evoluir para aplicação web
 
 ---
 
