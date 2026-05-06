@@ -187,8 +187,6 @@ def main():
 
         # ---------------- HORARIOS ----------------
 
-        # ---------------- HORARIOS ----------------
-
         elif op == "12":
             id_horario = input("ID do horario: ")
             id_turma = input("ID da turma: ")
