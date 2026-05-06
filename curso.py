@@ -2,34 +2,21 @@
 
 cursos = {}
 
-
-# ==============================
-# VALIDACOES
-# ==============================
-def _validar_id(id_curso):
-    return isinstance(id_curso, str) and len(id_curso.strip()) > 0
-
-
-def _validar_nome(nome):
-    return isinstance(nome, str) and len(nome.strip()) > 0
-
-
-def _validar_duracao(duracao):
-    return str(duracao).isdigit()
-
+from utils import validar_id , validar_nome, validar_duracao
+from turmas import turmas
 
 # ==============================
 # CREATE
 # ==============================
 def criar_curso(id_curso, nome, descricao, duracao):
 
-    if not _validar_id(id_curso):
+    if not validar_id(id_curso):
         return 400, "ID do curso invalido"
 
-    if not _validar_nome(nome):
+    if not validar_nome(nome):
         return 400, "Nome invalido"
 
-    if not _validar_duracao(duracao):
+    if not validar_duracao(duracao):
         return 400, "Duracao invalida"
 
     if id_curso in cursos:
@@ -77,12 +64,12 @@ def atualizar_curso(id_curso, novo_nome=None, nova_duracao=None):
         return 404, "Curso nao encontrado"
 
     if novo_nome is not None:
-        if not _validar_nome(novo_nome):
+        if not validar_nome(novo_nome):
             return 400, "Nome invalido"
         cursos[id_curso]["nome"] = novo_nome
 
     if nova_duracao is not None:
-        if not _validar_duracao(nova_duracao):
+        if not validar_duracao(nova_duracao):
             return 400, "Duracao invalida"
         cursos[id_curso]["duracao"] = nova_duracao
 
