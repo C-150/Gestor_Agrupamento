@@ -4,6 +4,13 @@
 # VALIDAÇÕES GENÉRICAS
 # ==============================
 
+def validar_id(id_horario):
+    return isinstance(id_horario, str) and len(id_horario.strip()) > 0
+
+
+def validar_lista(lista):
+    return isinstance(lista, list)
+
 def validar_texto(valor):
     """Verifica se é uma string não vazia (após strip)."""
     return isinstance(valor, str) and len(valor.strip()) > 0
