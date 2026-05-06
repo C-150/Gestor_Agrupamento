@@ -4,6 +4,15 @@
 # VALIDAÇÕES GENÉRICAS
 # ==============================
 
+def validar_nome(nome):
+    return isinstance(nome, str) and len(nome.strip()) > 0
+
+def validar_email(email):
+    return isinstance(email, str) and "@" in email and "." in email
+
+def validar_numero(numero):
+    return str(numero).isdigit()
+
 def validar_id(id_horario):
     return isinstance(id_horario, str) and len(id_horario.strip()) > 0
 
