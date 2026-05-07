@@ -2,23 +2,22 @@
 
 turmas = {}
 
-
 # ==============================
 # VALIDACOES
 # ==============================
-def _validar_texto(txt):
+def validar_texto(txt):
     return isinstance(txt, str) and len(txt.strip()) > 0
 
 
 # ==============================
 # CREATE
 # ==============================
-def criar_turma(id_turma, descricao):
+def criar_turma(id_turma, descricao, id_curso):
 
-    if not _validar_texto(id_turma):
+    if not validar_texto(id_turma):
         return 400, "ID invalido"
 
-    if not _validar_texto(descricao):
+    if not validar_texto(descricao):
         return 400, "Descricao invalida"
 
     if id_turma in turmas:
@@ -28,10 +27,11 @@ def criar_turma(id_turma, descricao):
         "id_turma": id_turma,
         "descricao": descricao,
         "horarios": [],
-        "alunos": {}
+        "alunos": {},
+        "id_curso": id_curso
     }
 
-    return 201, f"Turma {id_turma} criada com sucesso"
+    return 201, turmas[id_turma]
 
 
 # ==============================
@@ -94,12 +94,12 @@ def atualizar_turma(id_turma, nova_descricao):
     if id_turma not in turmas:
         return 404, "Turma nao encontrada"
 
-    if not _validar_texto(nova_descricao):
+    if not validar_texto(nova_descricao):
         return 400, "Descricao invalida"
 
     turmas[id_turma]["descricao"] = nova_descricao
 
-    return 200, "Turma atualizada com sucesso"
+    return 200, turmas[id_turma]
 
 
 # ==============================
@@ -112,4 +112,4 @@ def apagar_turma(id_turma):
 
     del turmas[id_turma]
 
-    return 200, "Turma removida com sucesso"
+    return 200, id_turma

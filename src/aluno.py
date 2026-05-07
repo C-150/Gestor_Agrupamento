@@ -1,33 +1,20 @@
 # aluno.py
 
 from turmas import turmas
-
-
-# ==============================
-# VALIDACOES
-# ==============================
-def _validar_nome(nome):
-    return isinstance(nome, str) and len(nome.strip()) > 0
-
-def _validar_email(email):
-    return isinstance(email, str) and "@" in email and "." in email
-
-def _validar_numero(numero):
-    return str(numero).isdigit()
-
+from utils import validar_email , validar_nome , validar_numero
 
 # ==============================
 # CREATE
 # ==============================
 def criar_aluno(numero, nome, email, telefone, data_nascimento, id_turma):
 
-    if not _validar_numero(numero):
+    if not validar_numero(numero):
         return 400, "Numero de aluno invalido"
 
-    if not _validar_nome(nome):
+    if not validar_nome(nome):
         return 400, "Nome invalido"
 
-    if not _validar_email(email):
+    if not validar_email(email):
         return 400, "Email invalido"
 
     if id_turma not in turmas:
@@ -117,12 +104,12 @@ def atualizar_aluno(numero, novo_nome=None, novo_email=None):
         if numero in turma["alunos"]:
 
             if novo_nome is not None:
-                if not _validar_nome(novo_nome):
+                if not validar_nome(novo_nome):
                     return 400, "Nome invalido"
                 turma["alunos"][numero]["nome"] = novo_nome
 
             if novo_email is not None:
-                if not _validar_email(novo_email):
+                if not validar_email(novo_email):
                     return 400, "Email invalido"
                 turma["alunos"][numero]["email"] = novo_email
 

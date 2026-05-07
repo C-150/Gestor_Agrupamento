@@ -1,178 +1,130 @@
----
+# 📚 Gestor Escolar (Python)
 
- 📚 Sistema de Gestão de Alunos
-
-Este projeto consiste num sistema desenvolvido em Python que permite a gestão básica de alunos organizados por turmas. A aplicação funciona através de um menu interativo no terminal, permitindo realizar operações essenciais sobre os dados.
+Sistema simples de gestão escolar em Python, utilizando o padrão CRUD (Create, Read, Update, Delete).
 
 ---
 
-🎯 Objetivo
+## 🎯 Funcionalidades
 
-O objetivo deste sistema é demonstrar conceitos fundamentais de programação, tais como:
+O sistema permite gerir:
 
-* Manipulação de dicionários
-* Organização de dados em estruturas hierárquicas
-* Criação de funções
-* Separação de responsabilidades em módulos (`Curso`,`horário`,`aluno`, `turma`, `utils`, `main`)
-* Interação com o utilizador via terminal
+* 👨‍🎓 Alunos
+* 🏫 Turmas
+* 📘 Cursos
+* 🗓️ Horários
 
----
-
- ⚙️ Funcionalidades
-
-O sistema inclui as seguintes operações:
-
-* ➕ **Criar aluno** — adiciona um novo aluno a uma turma
-* 📋 **Listar alunos** — apresenta todos os alunos organizados por turma
-* ✏️ **Atualizar aluno** — altera o nome de um aluno existente
-* 🗑️ **Remover aluno** — elimina um aluno do sistema
+Tudo através de um menu no terminal.
 
 ---
 
- 🗂️ Estrutura dos Dados
+## 📁 Estrutura do Projeto
 
-Os dados são armazenados em memória através de um dicionário chamado `turmas`, com a seguinte estrutura:
-
-```python
-turmas = {
-    id_turma: {
-        "id_turma": int,
-        "nome_turma": str,
-        "alunos": {
-            id_aluno: {
-                "id_aluno": int,
-                "nome": str,
-                "id_turma": int
-            }
-        },
-        "horario": []
-    }
-}
+```
+main.py
+aluno.py
+turmas.py
+curso.py
+horario.py
 ```
 
-🔎 **Explicação:**
+---
 
-* Cada turma contém vários alunos
-* Cada aluno é identificado por um ID único
-* A relação aluno–turma é feita através do `id_turma`
+## 🧠 Conceitos Utilizados
+
+* Dicionários (armazenamento em memória)
+* Funções
+* Validações simples
+* CRUD
+* Organização modular
 
 ---
 
- 🧩 Organização do Projeto
+## ⚙️ Como Executar
 
-O projeto está dividido em vários ficheiros para melhor organização:
+1. Abrir o terminal
+2. Executar:
 
-```bash
-projeto/
-│
-├── main.py     # Interface e menu
-├── aluno.py    # Operações sobre alunos
-├── turma.py    # Dados das turmas
-└── utils.py    # Funções de validação
 ```
-
-📌 **Vantagens desta divisão:**
-
-* Código mais limpo e organizado
-* Fácil manutenção
-* Reutilização de funções
-* Aproximação a projetos reais
-
----
-
-### ➕ `criar_aluno()`
-
-* Solicita ID, nome e turma
-* Valida a existência da turma
-* Adiciona o aluno ao sistema
-
----
-
-### 📋 `listar_alunos()`
-
-* Percorre todas as turmas
-* Mostra os alunos organizados
-* Indica quando não existem alunos
-
----
-
-### ✏️ `atualizar_aluno()`
-
-* Procura o aluno pelo ID
-* Permite alterar o nome
-
----
-
-### 🗑️ `apagar_aluno()`
-
-* Remove um aluno com base no ID
-* Garante que o aluno existe antes de apagar
-
----
-
-### 🧭 `menu()`
-
-* Apresenta opções ao utilizador
-* Controla o fluxo do programa
-
----
-
-### ▶️ `main()`
-
-* Ponto de entrada do programa
-* Inicia o menu interativo
-
----
-
-## ▶️ Como Executar
-
-1. Certifica-te de que tens o Python instalado
-2. Coloca os ficheiros na mesma pasta
-3. Executa no terminal:
-
-```bash
 python main.py
 ```
 
 ---
 
-## 💡 Exemplo de Utilização
+## 🧾 Funcionalidades por Módulo
 
-```
---- GESTOR ESCOLAR ---
-1 - Criar aluno
-2 - Ver alunos
-3 - Atualizar aluno
-4 - Apagar aluno
-0 - Sair
-Escolhe:
-```
+### 👨‍🎓 Alunos
+
+* Criar aluno
+* Listar alunos
+* Atualizar aluno
+* Apagar aluno
 
 ---
 
-## ⚠️ Limitações do Sistema
+### 🏫 Turmas
 
-* ❗ Dados não persistentes (perdem-se ao fechar o programa)
-* ❗ Apenas uma turma pré-definida
-* ❗ Validação básica de dados
-* ❗ Interface apenas em modo texto
+* Criar turma
+* Listar turmas
+* Apagar turma
 
 ---
 
-## 🧠 Conceitos Aplicados
+### 📘 Cursos
 
-Este projeto utiliza conceitos importantes como:
+**Atributos:**
 
-* Estruturas de dados (dicionários aninhados)
-* Modularização de código
-* Funções e reutilização
-* Entrada e saída de dados
-* Controlo de fluxo (loops e condições)
+* `id_curso`
+* `nome`
+* `descricao`
+* `duracao`
+* `turmas` (lista de IDs)
+
+**Funcionalidades:**
+
+* Criar curso
+* Listar cursos
+* Atualizar curso
+* Apagar curso
+
+---
+
+### 🗓️ Horários
+
+**Atributos:**
+
+* `id_horario`
+* `id_turma`
+* `lista_disciplina`
+* `lista_professor`
+
+**Exemplo:**
+
+```
+{
+  "id_horario": "H1",
+  "id_turma": "T1",
+  "lista_disciplina": ["matematica", "portugues"],
+  "lista_professor": ["prof1", "prof2"]
+}
+```
+
+**Funcionalidades:**
+
+* Criar horário
+* Listar horários
+* Atualizar horário
+* Apagar horário
+
+---
+
+## 📌 Notas
+
+* Os dados são guardados apenas em memória (não existe base de dados)
+* Ao fechar o programa, os dados são perdidos
+* Sistema desenvolvido para fins educativos
 
 ---
 
 ## 👨‍💻 Autor
 
-**Diogo Fernandes**
-
----
+Diogo Fernandes
