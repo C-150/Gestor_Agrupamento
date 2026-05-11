@@ -1,32 +1,8 @@
 # curso.py
 
-import json
-import os
-
 from utils import validar_id, validar_nome, validar_duracao
 
 cursos = {}
-
-FICHEIRO_CURSOS = "cursos.json"
-
-
-# ==============================
-# PERSISTENCIA
-# ==============================
-def guardar_cursos():
-    with open(FICHEIRO_CURSOS, "w", encoding="utf-8") as ficheiro:
-        json.dump(cursos, ficheiro, indent=4, ensure_ascii=False)
-
-
-def carregar_cursos():
-    global cursos
-
-    if os.path.exists(FICHEIRO_CURSOS):
-        with open(FICHEIRO_CURSOS, "r", encoding="utf-8") as ficheiro:
-            cursos = json.load(ficheiro)
-    else:
-        cursos = {}
-
 
 # ==============================
 # CREATE
