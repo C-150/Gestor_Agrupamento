@@ -1,9 +1,32 @@
 # horario.py
-
+import json
+import os
 from turmas import turmas
 from curso import validar_id, validar_nome, validar_duracao
 from utils import validar_id , validar_lista
 horarios = {}
+
+
+FICHEIRO_HORARIOS = "horarios.json"
+
+
+# ==============================
+# PERSISTENCIA
+# ==============================
+def guardar_horarios():
+    with open(FICHEIRO_HORARIOS, "w", encoding="utf-8") as ficheiro:
+        json.dump(horarios, ficheiro, indent=4, ensure_ascii=False)
+
+
+def carregar_horarios():
+    global horarios
+
+    if os.path.exists(FICHEIRO_HORARIOS):
+        with open(FICHEIRO_HORARIOS, "r", encoding="utf-8") as ficheiro:
+            horarios = json.load(ficheiro)
+    else:
+        horarios = {}
+
 # ==============================
 # CREATE
 # ==============================
