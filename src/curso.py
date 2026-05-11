@@ -1,14 +1,38 @@
 # curso.py
 
+import json
+import os
+
+from utils import validar_id, validar_nome, validar_duracao
+
 cursos = {}
 
-from utils import validar_id , validar_nome, validar_duracao
-from turmas import turmas
+FICHEIRO_CURSOS = "cursos.json"
+
+
+# ==============================
+# PERSISTENCIA
+# ==============================
+def guardar_cursos():
+    with open(FICHEIRO_CURSOS, "w", encoding="utf-8") as ficheiro:
+        json.dump(cursos, ficheiro, indent=4, ensure_ascii=False)
+
+
+def carregar_cursos():
+    global cursos
+
+    if os.path.exists(FICHEIRO_CURSOS):
+        with open(FICHEIRO_CURSOS, "r", encoding="utf-8") as ficheiro:
+            cursos = json.load(ficheiro)
+    else:
+        cursos = {}
+
 
 # ==============================
 # CREATE
 # ==============================
 def criar_curso(id_curso, nome, descricao, duracao):
+    carregar_cursos()
 
     if not validar_id(id_curso):
         return 400, "ID do curso invalido"
@@ -22,18 +46,16 @@ def criar_curso(id_curso, nome, descricao, duracao):
     if id_curso in cursos:
         return 409, "Curso ja existe"
 
-    # ==============================
-    # ATRIBUTOS DO CURSO
-    # ==============================
     curso = {
-        "id_curso": id_curso,        # identificador unico
-        "nome": nome,                # nome do curso
-        "descricao": descricao,      # descricao do curso
-        "duracao": duracao                # lista de IDs das turmas
+        "id_curso": id_curso,
+        "nome": nome,
+        "descricao": descricao,
+        "duracao": duracao
     }
 
     cursos[id_curso] = curso
 
+    guardar_cursos()
     return 201, curso
 
 
@@ -41,6 +63,7 @@ def criar_curso(id_curso, nome, descricao, duracao):
 # READ
 # ==============================
 def listar_cursos():
+    carregar_cursos()
 
     if not cursos:
         return 404, "Nenhum curso encontrado"
@@ -49,7 +72,7 @@ def listar_cursos():
 
     for curso in cursos.values():
         lista.append(
-            f"ID: {curso['id_curso']} | Nome: {curso['nome']} | Duracao: {curso['duracao']} | Turmas: {curso['turmas']}"
+            f"ID: {curso['id_curso']} | Nome: {curso['nome']} | Duracao: {curso['duracao']}"
         )
 
     return 200, lista
@@ -59,6 +82,7 @@ def listar_cursos():
 # UPDATE
 # ==============================
 def atualizar_curso(id_curso, novo_nome=None, nova_duracao=None):
+    carregar_cursos()
 
     if id_curso not in cursos:
         return 404, "Curso nao encontrado"
@@ -73,6 +97,7 @@ def atualizar_curso(id_curso, novo_nome=None, nova_duracao=None):
             return 400, "Duracao invalida"
         cursos[id_curso]["duracao"] = nova_duracao
 
+    guardar_cursos()
     return 200, cursos[id_curso]
 
 
@@ -80,6 +105,7 @@ def atualizar_curso(id_curso, novo_nome=None, nova_duracao=None):
 # DELETE
 # ==============================
 def apagar_curso(id_curso):
+    carregar_cursos()
 
     if id_curso not in cursos:
         return 404, "Curso nao encontrado"
@@ -87,4 +113,5 @@ def apagar_curso(id_curso):
     removido = cursos[id_curso]
     del cursos[id_curso]
 
+    guardar_cursos()
     return 200, removido
