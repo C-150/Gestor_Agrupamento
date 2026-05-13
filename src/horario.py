@@ -1,4 +1,3 @@
-# horario.py
 import json
 import os
 from turmas import turmas
@@ -27,10 +26,13 @@ def carregar_horarios():
     else:
         horarios = {}
 
+
 # ==============================
 # CREATE
 # ==============================
 def criar_horario(id_horario, id_turma, lista_disciplina, lista_professor):
+
+    carregar_horarios()
 
     if not validar_id(id_horario):
         return 400, "ID invalido"
@@ -47,9 +49,6 @@ def criar_horario(id_horario, id_turma, lista_disciplina, lista_professor):
     if not validar_lista(lista_professor):
         return 400, "Lista de professores invalida"
 
-    # ==============================
-    # ATRIBUTOS DO HORARIO
-    # ==============================
     horario = {
         "id_horario": id_horario,
         "id_turma": id_turma,
@@ -59,6 +58,8 @@ def criar_horario(id_horario, id_turma, lista_disciplina, lista_professor):
 
     horarios[id_horario] = horario
 
+    guardar_horarios()
+
     return 201, horario
 
 
@@ -66,6 +67,8 @@ def criar_horario(id_horario, id_turma, lista_disciplina, lista_professor):
 # READ
 # ==============================
 def listar_horarios():
+
+    carregar_horarios()
 
     if not horarios:
         return 404, "Nenhum horario encontrado"
@@ -85,18 +88,24 @@ def listar_horarios():
 # ==============================
 def atualizar_horario(id_horario, novas_disciplinas=None, novos_professores=None):
 
+    carregar_horarios()
+
     if id_horario not in horarios:
         return 404, "Horario nao encontrado"
 
     if novas_disciplinas is not None:
         if not validar_lista(novas_disciplinas):
             return 400, "Lista invalida"
+
         horarios[id_horario]["lista_disciplina"] = novas_disciplinas
 
     if novos_professores is not None:
         if not validar_lista(novos_professores):
             return 400, "Lista invalida"
+
         horarios[id_horario]["lista_professor"] = novos_professores
+
+    guardar_horarios()
 
     return 200, horarios[id_horario]
 
@@ -106,10 +115,16 @@ def atualizar_horario(id_horario, novas_disciplinas=None, novos_professores=None
 # ==============================
 def apagar_horario(id_horario):
 
+    carregar_horarios()
+
     if id_horario not in horarios:
         return 404, "Horario nao encontrado"
 
     removido = horarios[id_horario]
+
     del horarios[id_horario]
 
+    guardar_horarios()
+
     return 200, removido
+
