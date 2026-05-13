@@ -1,12 +1,38 @@
 # aluno.py
 
-from turmas import turmas
-from utils import validar_email , validar_nome , validar_numero
+import json
+import os
+
+from utils import validar_email, validar_nome, validar_numero
+
+alunos = {}
+
+FICHEIRO_ALUNOS = "alunos.json"
+
+
+# ==============================
+# PERSISTENCIA
+# ==============================
+def guardar_alunos():
+    with open(FICHEIRO_ALUNOS, "w", encoding="utf-8") as ficheiro:
+        json.dump(alunos, ficheiro, indent=4, ensure_ascii=False)
+
+
+def carregar_alunos():
+    global alunos
+
+    if os.path.exists(FICHEIRO_ALUNOS):
+        with open(FICHEIRO_ALUNOS, "r", encoding="utf-8") as ficheiro:
+            alunos = json.load(ficheiro)
+    else:
+        alunos = {}
+
 
 # ==============================
 # CREATE
 # ==============================
 def criar_aluno(numero, nome, email, telefone, data_nascimento, id_turma):
+    carregar_alunos()
 
     if not validar_numero(numero):
         return 400, "Numero de aluno invalido"
@@ -17,11 +43,8 @@ def criar_aluno(numero, nome, email, telefone, data_nascimento, id_turma):
     if not validar_email(email):
         return 400, "Email invalido"
 
-    if id_turma not in turmas:
-        return 404, "Turma nao existe"
-
-    if numero in turmas[id_turma]["alunos"]:
-        return 409, "Aluno ja existe nesta turma"
+    if numero in alunos:
+        return 409, "Aluno ja existe"
 
     aluno = {
         "numero_aluno": numero,
@@ -32,7 +55,8 @@ def criar_aluno(numero, nome, email, telefone, data_nascimento, id_turma):
         "id_turma": id_turma
     }
 
-    turmas[id_turma]["alunos"][numero] = aluno
+    alunos[numero] = aluno
+    guardar_alunos()
 
     return 201, aluno
 
@@ -41,20 +65,17 @@ def criar_aluno(numero, nome, email, telefone, data_nascimento, id_turma):
 # READ
 # ==============================
 def listar_alunos():
+    carregar_alunos()
 
-    if not turmas:
-        return 404, "Nao existem turmas"
+    if not alunos:
+        return 404, "Nenhum aluno encontrado"
 
     lista = []
 
-    for turma in turmas.values():
-        for aluno in turma["alunos"].values():
-            lista.append(
-                f"Nº: {aluno['numero_aluno']} | Nome: {aluno['nome']} | Turma: {turma['descricao']}"
-            )
-
-    if not lista:
-        return 404, "Nenhum aluno encontrado"
+    for aluno in alunos.values():
+        lista.append(
+            f"Nº: {aluno['numero_aluno']} | Nome: {aluno['nome']} | Turma: {aluno['id_turma']}"
+        )
 
     return 200, lista
 
@@ -63,13 +84,13 @@ def listar_alunos():
 # SEARCH
 # ==============================
 def pesquisar_aluno(texto):
+    carregar_alunos()
 
     resultados = {}
 
-    for turma in turmas.values():
-        for num, aluno in turma["alunos"].items():
-            if texto.lower() in aluno["nome"].lower() or texto in aluno["email"]:
-                resultados[num] = aluno
+    for num, aluno in alunos.items():
+        if texto.lower() in aluno["nome"].lower() or texto in aluno["email"]:
+            resultados[num] = aluno
 
     if not resultados:
         return 404, "Nenhum aluno encontrado"
@@ -81,11 +102,9 @@ def pesquisar_aluno(texto):
 # STATS
 # ==============================
 def estatisticas_alunos():
+    carregar_alunos()
 
-    total = 0
-
-    for turma in turmas.values():
-        total += len(turma["alunos"])
+    total = len(alunos)
 
     if total == 0:
         return 404, "Sem alunos registados"
@@ -99,34 +118,36 @@ def estatisticas_alunos():
 # UPDATE
 # ==============================
 def atualizar_aluno(numero, novo_nome=None, novo_email=None):
+    carregar_alunos()
 
-    for turma in turmas.values():
-        if numero in turma["alunos"]:
+    if numero not in alunos:
+        return 404, "Aluno nao encontrado"
 
-            if novo_nome is not None:
-                if not validar_nome(novo_nome):
-                    return 400, "Nome invalido"
-                turma["alunos"][numero]["nome"] = novo_nome
+    if novo_nome is not None:
+        if not validar_nome(novo_nome):
+            return 400, "Nome invalido"
+        alunos[numero]["nome"] = novo_nome
 
-            if novo_email is not None:
-                if not validar_email(novo_email):
-                    return 400, "Email invalido"
-                turma["alunos"][numero]["email"] = novo_email
+    if novo_email is not None:
+        if not validar_email(novo_email):
+            return 400, "Email invalido"
+        alunos[numero]["email"] = novo_email
 
-            return 200, turma["alunos"][numero]
-
-    return 404, "Aluno nao encontrado"
+    guardar_alunos()
+    return 200, alunos[numero]
 
 
 # ==============================
 # DELETE
 # ==============================
 def apagar_aluno(numero):
+    carregar_alunos()
 
-    for turma in turmas.values():
-        if numero in turma["alunos"]:
-            aluno_eliminado = turma["alunos"][numero]
-            del turma["alunos"][numero]
-            return 200, aluno_eliminado
+    if numero not in alunos:
+        return 404, "Aluno nao encontrado"
 
-    return 404, "Aluno nao encontrado"
+    aluno_eliminado = alunos[numero]
+    del alunos[numero]
+    guardar_alunos()
+
+    return 200, aluno_eliminado

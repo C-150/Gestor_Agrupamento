@@ -1,6 +1,29 @@
 # turmas.py
 
+import json
+import os
+
 turmas = {}
+
+FICHEIRO_TURMAS = "turmas.json"
+
+# ==============================
+# PERSISTENCIA
+# ==============================
+def guardar_turmas():
+    with open(FICHEIRO_TURMAS, "w", encoding="utf-8") as ficheiro:
+        json.dump(turmas, ficheiro, indent=4, ensure_ascii=False)
+
+
+def carregar_turmas():
+    global turmas
+
+    if os.path.exists(FICHEIRO_TURMAS):
+        with open(FICHEIRO_TURMAS, "r", encoding="utf-8") as ficheiro:
+            turmas = json.load(ficheiro)
+    else:
+        turmas = {}
+
 
 # ==============================
 # VALIDACOES
@@ -13,6 +36,7 @@ def validar_texto(txt):
 # CREATE
 # ==============================
 def criar_turma(id_turma, descricao, id_curso):
+    carregar_turmas()
 
     if not validar_texto(id_turma):
         return 400, "ID invalido"
@@ -31,6 +55,7 @@ def criar_turma(id_turma, descricao, id_curso):
         "id_curso": id_curso
     }
 
+    guardar_turmas()
     return 201, turmas[id_turma]
 
 
@@ -38,6 +63,7 @@ def criar_turma(id_turma, descricao, id_curso):
 # READ
 # ==============================
 def listar_turmas():
+    carregar_turmas()
 
     if not turmas:
         return 404, "Nenhuma turma encontrada"
@@ -56,6 +82,7 @@ def listar_turmas():
 # SEARCH
 # ==============================
 def pesquisar_turma(texto):
+    carregar_turmas()
 
     resultados = {}
 
@@ -73,6 +100,7 @@ def pesquisar_turma(texto):
 # STATS
 # ==============================
 def estatisticas_turmas():
+    carregar_turmas()
 
     if not turmas:
         return 404, "Sem turmas registadas"
@@ -90,6 +118,7 @@ def estatisticas_turmas():
 # UPDATE
 # ==============================
 def atualizar_turma(id_turma, nova_descricao):
+    carregar_turmas()
 
     if id_turma not in turmas:
         return 404, "Turma nao encontrada"
@@ -99,6 +128,7 @@ def atualizar_turma(id_turma, nova_descricao):
 
     turmas[id_turma]["descricao"] = nova_descricao
 
+    guardar_turmas()
     return 200, turmas[id_turma]
 
 
@@ -106,10 +136,12 @@ def atualizar_turma(id_turma, nova_descricao):
 # DELETE
 # ==============================
 def apagar_turma(id_turma):
+    carregar_turmas()
 
     if id_turma not in turmas:
         return 404, "Turma nao encontrada"
 
     del turmas[id_turma]
 
+    guardar_turmas()
     return 200, id_turma
