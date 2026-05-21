@@ -1,75 +1,125 @@
-# utils.py
+
+from logger_config import app_logger  # noqa: F401 — garante configuracao do logger
+
 
 # ==============================
-# VALIDAÇÕES GENÉRICAS
+# VALIDACOES GENERICAS
 # ==============================
-
-def validar_nome(nome):
-    return isinstance(nome, str) and len(nome.strip()) > 0
-
-def validar_email(email):
-    return isinstance(email, str) and "@" in email and "." in email
-
-def validar_numero(numero):
-    return str(numero).isdigit()
-
-def validar_id(id_horario):
-    return isinstance(id_horario, str) and len(id_horario.strip()) > 0
-
-
-def validar_lista(lista):
-    return isinstance(lista, list)
 
 def validar_texto(valor):
-    """Verifica se é uma string não vazia (após strip)."""
+    app_logger.debug("Validacao de texto executada")
+
     return isinstance(valor, str) and len(valor.strip()) > 0
 
+
 def validar_id(valor):
-    """Alias para validar_texto - usado para IDs."""
+    app_logger.debug("Validacao de ID executada: %s", valor)
+
     return validar_texto(valor)
+
 
 def validar_nome(valor):
-    """Alias para validar_texto - usado para nomes."""
+    app_logger.debug("Validacao de nome executada: %s", valor)
+
     return validar_texto(valor)
 
+
 def validar_email(valor):
-    """Validação simples de email: contém '@' e '.'."""
-    return isinstance(valor, str) and "@" in valor and "." in valor
+    app_logger.debug("Validacao de email executada: %s", valor)
+
+    valido = (
+            isinstance(valor, str)
+            and "@" in valor
+            and "." in valor
+    )
+
+    if not valido:
+        app_logger.warning("Email invalido: %s", valor)
+
+    return valido
+
 
 def validar_numero(valor):
-    """Verifica se o valor pode ser convertido para inteiro (ou é um inteiro)."""
+    app_logger.debug("Validacao de numero executada: %s", valor)
+
     try:
+
         int(valor)
+
         return True
+
     except (ValueError, TypeError):
+
+        app_logger.exception("Numero invalido: %s", valor)
+
         return False
+
 
 def validar_duracao(valor):
-    """Verifica se a duração é um número inteiro positivo."""
+    app_logger.debug("Validacao de duracao executada: %s", valor)
+
     try:
-        return int(valor) > 0
+
+        valido = int(valor) > 0
+
+        if not valido:
+            app_logger.warning("Duracao invalida: %s", valor)
+
+        return valido
+
     except (ValueError, TypeError):
+
+        app_logger.exception("Erro na validacao da duracao: %s", valor)
+
         return False
 
+
 def validar_lista(valor):
-    """Verifica se é uma lista (pode estar vazia)."""
-    return isinstance(valor, list)
+    app_logger.debug("Validacao de lista executada")
+
+    if not isinstance(valor, list):
+        app_logger.warning("Valor recebido nao e lista")
+
+        return False
+
+    return True
 
 
 # ==============================
-# FUNÇÕES DE INPUT COM VALIDAÇÃO
+# FUNCOES DE INPUT
 # ==============================
-
 def ler_int(mensagem):
+    app_logger.info("Leitura de inteiro iniciada")
+
     while True:
+
         try:
-            return int(input(mensagem))
+
+            valor = int(input(mensagem))
+
+            app_logger.info("Inteiro lido com sucesso: %s", valor)
+
+            return valor
+
         except ValueError:
-            print("Erro: insere um número válido.")
+
+            app_logger.exception("Erro ao ler inteiro")
+
+            print("Erro: insere um numero valido.")
+
 
 def ler_texto(mensagem):
+    app_logger.info("Leitura de texto iniciada")
+
     while True:
+
         texto = input(mensagem).strip()
+
         if texto:
+            app_logger.info("Texto lido com sucesso")
+
             return texto
+
+        app_logger.error("Texto vazio inserido")
+
         print("Erro: texto vazio.")
