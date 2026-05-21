@@ -1,4 +1,4 @@
-import logging
+
 from logger_config import app_logger  # noqa: F401 — garante configuracao do logger
 
 
@@ -7,25 +7,25 @@ from logger_config import app_logger  # noqa: F401 — garante configuracao do l
 # ==============================
 
 def validar_texto(valor):
-    logging.debug("Validacao de texto executada")
+    app_logger.debug("Validacao de texto executada")
 
     return isinstance(valor, str) and len(valor.strip()) > 0
 
 
 def validar_id(valor):
-    logging.debug("Validacao de ID executada: %s", valor)
+    app_logger.debug("Validacao de ID executada: %s", valor)
 
     return validar_texto(valor)
 
 
 def validar_nome(valor):
-    logging.debug("Validacao de nome executada: %s", valor)
+    app_logger.debug("Validacao de nome executada: %s", valor)
 
     return validar_texto(valor)
 
 
 def validar_email(valor):
-    logging.debug("Validacao de email executada: %s", valor)
+    app_logger.debug("Validacao de email executada: %s", valor)
 
     valido = (
             isinstance(valor, str)
@@ -34,13 +34,13 @@ def validar_email(valor):
     )
 
     if not valido:
-        logging.warning("Email invalido: %s", valor)
+        app_logger.warning("Email invalido: %s", valor)
 
     return valido
 
 
 def validar_numero(valor):
-    logging.debug("Validacao de numero executada: %s", valor)
+    app_logger.debug("Validacao de numero executada: %s", valor)
 
     try:
 
@@ -50,35 +50,35 @@ def validar_numero(valor):
 
     except (ValueError, TypeError):
 
-        logging.warning("Numero invalido: %s", valor)
+        app_logger.exception("Numero invalido: %s", valor)
 
         return False
 
 
 def validar_duracao(valor):
-    logging.debug("Validacao de duracao executada: %s", valor)
+    app_logger.debug("Validacao de duracao executada: %s", valor)
 
     try:
 
         valido = int(valor) > 0
 
         if not valido:
-            logging.warning("Duracao invalida: %s", valor)
+            app_logger.warning("Duracao invalida: %s", valor)
 
         return valido
 
     except (ValueError, TypeError):
 
-        logging.warning("Erro na validacao da duracao: %s", valor)
+        app_logger.exception("Erro na validacao da duracao: %s", valor)
 
         return False
 
 
 def validar_lista(valor):
-    logging.debug("Validacao de lista executada")
+    app_logger.debug("Validacao de lista executada")
 
     if not isinstance(valor, list):
-        logging.warning("Valor recebido nao e lista")
+        app_logger.warning("Valor recebido nao e lista")
 
         return False
 
@@ -89,7 +89,7 @@ def validar_lista(valor):
 # FUNCOES DE INPUT
 # ==============================
 def ler_int(mensagem):
-    logging.info("Leitura de inteiro iniciada")
+    app_logger.info("Leitura de inteiro iniciada")
 
     while True:
 
@@ -97,29 +97,29 @@ def ler_int(mensagem):
 
             valor = int(input(mensagem))
 
-            logging.info("Inteiro lido com sucesso: %s", valor)
+            app_logger.info("Inteiro lido com sucesso: %s", valor)
 
             return valor
 
         except ValueError:
 
-            logging.error("Erro ao ler inteiro")
+            app_logger.exception("Erro ao ler inteiro")
 
             print("Erro: insere um numero valido.")
 
 
 def ler_texto(mensagem):
-    logging.info("Leitura de texto iniciada")
+    app_logger.info("Leitura de texto iniciada")
 
     while True:
 
         texto = input(mensagem).strip()
 
         if texto:
-            logging.info("Texto lido com sucesso")
+            app_logger.info("Texto lido com sucesso")
 
             return texto
 
-        logging.warning("Texto vazio inserido")
+        app_logger.error("Texto vazio inserido")
 
         print("Erro: texto vazio.")
