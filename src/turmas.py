@@ -1,5 +1,6 @@
-import logging
+
 import json
+
 import os
 
 from logger_config import app_logger  # noqa: F401 — garante configuracao do logger
@@ -14,25 +15,25 @@ FICHEIRO_TURMAS = "turmas.json"
 # ==============================
 def guardar_turmas():
 
-    logging.debug("A guardar turmas no ficheiro JSON")
+    app_logger.debug("A guardar turmas no ficheiro JSON")
 
     try:
 
         with open(FICHEIRO_TURMAS, "w", encoding="utf-8") as ficheiro:
             json.dump(turmas, ficheiro, indent=4, ensure_ascii=False)
 
-        logging.info("Turmas guardadas com sucesso")
+        app_logger.info("Turmas guardadas com sucesso")
 
     except Exception as erro:
 
-        logging.error("Erro ao guardar turmas: %s", erro)
+        app_logger.exception("Erro ao guardar turmas: %s", erro)
 
 
 def carregar_turmas():
 
     global turmas
 
-    logging.debug("Tentativa de carregar turmas")
+    app_logger.debug("Tentativa de carregar turmas")
 
     try:
 
@@ -41,18 +42,18 @@ def carregar_turmas():
             with open(FICHEIRO_TURMAS, "r", encoding="utf-8") as ficheiro:
                 turmas = json.load(ficheiro)
 
-            logging.info("Turmas carregadas com sucesso")
-            logging.debug("Total de turmas carregadas: %s", len(turmas))
+            app_logger.info("Turmas carregadas com sucesso")
+            app_logger.debug("Total de turmas carregadas: %s", len(turmas))
 
         else:
 
             turmas = {}
 
-            logging.warning("Ficheiro turmas.json nao existe")
+            app_logger.warning("Ficheiro turmas.json nao existe")
 
     except json.JSONDecodeError:
 
-        logging.critical("JSON de turmas corrompido")
+        app_logger.exception("JSON de turmas corrompido")
 
         turmas = {}
 
@@ -62,7 +63,7 @@ def carregar_turmas():
 # ==============================
 def validar_texto(txt):
 
-    logging.debug("Validacao de texto executada")
+    app_logger.debug("Validacao de texto executada")
 
     return isinstance(txt, str) and len(txt.strip()) > 0
 
@@ -74,7 +75,7 @@ def criar_turma(id_turma, descricao, id_curso):
 
     carregar_turmas()
 
-    logging.debug(
+    app_logger.debug(
         "Dados recebidos: %s %s %s",
         id_turma,
         descricao,
@@ -83,19 +84,19 @@ def criar_turma(id_turma, descricao, id_curso):
 
     if not validar_texto(id_turma):
 
-        logging.warning("ID de turma invalido")
+        app_logger.error("ID de turma invalido")
 
         return 400, "ID invalido"
 
     if not validar_texto(descricao):
 
-        logging.warning("Descricao invalida para turma %s", id_turma)
+        app_logger.error("Descricao invalida para turma %s", id_turma)
 
         return 400, "Descricao invalida"
 
     if id_turma in turmas:
 
-        logging.error("Turma %s ja existe", id_turma)
+        app_logger.error("Turma %s ja existe", id_turma)
 
         return 409, "Turma ja existe"
 
@@ -109,7 +110,7 @@ def criar_turma(id_turma, descricao, id_curso):
 
     guardar_turmas()
 
-    logging.info("Turma %s criada com sucesso", id_turma)
+    app_logger.info("Turma %s criada com sucesso", id_turma)
 
     return 201, turmas[id_turma]
 
@@ -121,11 +122,11 @@ def listar_turmas():
 
     carregar_turmas()
 
-    logging.info("Listagem de turmas executada")
+    app_logger.info("Listagem de turmas executada")
 
     if not turmas:
 
-        logging.warning("Nenhuma turma encontrada")
+        app_logger.error()("Nenhuma turma encontrada")
 
         return 404, "Nenhuma turma encontrada"
 
@@ -139,7 +140,7 @@ def listar_turmas():
             f"Alunos: {len(t['alunos'])}"
         )
 
-    logging.debug("Total de turmas listadas: %s", len(lista))
+    app_logger.debug("Total de turmas listadas: %s", len(lista))
 
     return 200, lista
 
@@ -151,7 +152,7 @@ def pesquisar_turma(texto):
 
     carregar_turmas()
 
-    logging.info("Pesquisa de turma: %s", texto)
+    app_logger.info("Pesquisa de turma: %s", texto)
 
     resultados = {}
 
@@ -163,11 +164,11 @@ def pesquisar_turma(texto):
 
     if not resultados:
 
-        logging.warning("Pesquisa sem resultados: %s", texto)
+        app_logger.error("Pesquisa sem resultados: %s", texto)
 
         return 404, "Nenhuma turma encontrada"
 
-    logging.info("%s turmas encontradas", len(resultados))
+    app_logger.info("%s turmas encontradas", len(resultados))
 
     return 200, resultados
 
@@ -179,11 +180,11 @@ def estatisticas_turmas():
 
     carregar_turmas()
 
-    logging.debug("Calculo de estatisticas das turmas")
+    app_logger.debug("Calculo de estatisticas das turmas")
 
     if not turmas:
 
-        logging.warning("Sem turmas registadas")
+        app_logger.error("Sem turmas registadas")
 
         return 404, "Sem turmas registadas"
 
@@ -194,7 +195,7 @@ def estatisticas_turmas():
         for t in turmas.values()
     )
 
-    logging.info("Estatisticas de turmas geradas")
+    app_logger.info("Estatisticas de turmas geradas")
 
     return 200, {
         "total_turmas": total_turmas,
@@ -209,17 +210,17 @@ def atualizar_turma(id_turma, nova_descricao):
 
     carregar_turmas()
 
-    logging.info("Atualizacao da turma %s", id_turma)
+    app_logger.info("Atualizacao da turma %s", id_turma)
 
     if id_turma not in turmas:
 
-        logging.error("Turma %s nao encontrada", id_turma)
+        app_logger.error("Turma %s nao encontrada", id_turma)
 
         return 404, "Turma nao encontrada"
 
     if not validar_texto(nova_descricao):
 
-        logging.warning(
+        app_logger.error(
             "Descricao invalida para turma %s",
             id_turma
         )
@@ -230,7 +231,7 @@ def atualizar_turma(id_turma, nova_descricao):
 
     guardar_turmas()
 
-    logging.info("Turma %s atualizada com sucesso", id_turma)
+    app_logger.info("Turma %s atualizada com sucesso", id_turma)
 
     return 200, turmas[id_turma]
 
@@ -242,11 +243,11 @@ def apagar_turma(id_turma):
 
     carregar_turmas()
 
-    logging.info("Tentativa de apagar turma %s", id_turma)
+    app_logger.info("Tentativa de apagar turma %s", id_turma)
 
     if id_turma not in turmas:
 
-        logging.error("Turma %s nao encontrada", id_turma)
+        app_logger.error("Turma %s nao encontrada", id_turma)
 
         return 404, "Turma nao encontrada"
 
@@ -254,6 +255,6 @@ def apagar_turma(id_turma):
 
     guardar_turmas()
 
-    logging.info("Turma %s apagada com sucesso", id_turma)
+    app_logger.info("Turma %s apagada com sucesso", id_turma)
 
     return 200, id_turma
