@@ -1,4 +1,3 @@
-import logging
 import json
 import os
 
@@ -16,23 +15,23 @@ FICHEIRO_HORARIOS = "horarios.json"
 # ==============================
 def guardar_horarios():
 
-    logging.debug("A guardar horarios no ficheiro JSON")
+    app_logger.debug("A guardar horarios no ficheiro JSON")
 
     try:
         with open(FICHEIRO_HORARIOS, "w", encoding="utf-8") as ficheiro:
             json.dump(horarios, ficheiro, indent=4, ensure_ascii=False)
 
-        logging.info("Horarios guardados com sucesso")
+        app_logger.info("Horarios guardados com sucesso")
 
     except Exception as erro:
-        logging.error("Erro ao guardar horarios: %s", erro)
+        app_logger.exception("Erro ao guardar horarios: %s", erro)
 
 
 def carregar_horarios():
 
     global horarios
 
-    logging.debug("Tentativa de carregar horarios")
+    app_logger.debug("Tentativa de carregar horarios")
 
     try:
 
@@ -41,16 +40,16 @@ def carregar_horarios():
             with open(FICHEIRO_HORARIOS, "r", encoding="utf-8") as ficheiro:
                 horarios = json.load(ficheiro)
 
-            logging.info("Horarios carregados com sucesso")
-            logging.debug("Total de horarios carregados: %s", len(horarios))
+            app_logger.info("Horarios carregados com sucesso")
+            app_logger.debug("Total de horarios carregados: %s", len(horarios))
 
         else:
             horarios = {}
-            logging.warning("Ficheiro horarios.json nao existe")
+            app_logger.error("Ficheiro horarios.json nao existe")
 
     except json.JSONDecodeError:
 
-        logging.critical("JSON de horarios corrompido")
+        app_logger.exception("JSON de horarios corrompido")
         horarios = {}
 
 
@@ -66,33 +65,33 @@ def criar_horario(
 
     carregar_horarios()
 
-    logging.debug(
+    app_logger.debug(
         "Dados recebidos: %s %s",
         id_horario,
         id_turma
     )
 
     if not validar_id(id_horario):
-        logging.warning("ID de horario invalido: %s", id_horario)
+        app_logger.error("ID de horario invalido: %s", id_horario)
         return 400, "ID invalido"
 
     if id_horario in horarios:
-        logging.error("Horario %s ja existe", id_horario)
+        app_logger.error("Horario %s ja existe", id_horario)
         return 409, "Horario ja existe"
 
     if id_turma not in turmas:
-        logging.error("Turma %s nao existe", id_turma)
+        app_logger.error("Turma %s nao existe", id_turma)
         return 404, "Turma nao existe"
 
     if not validar_lista(lista_disciplina):
-        logging.warning(
+        app_logger.error(
             "Lista de disciplinas invalida no horario %s",
             id_horario
         )
         return 400, "Lista de disciplinas invalida"
 
     if not validar_lista(lista_professor):
-        logging.warning(
+        app_logger.error(
             "Lista de professores invalida no horario %s",
             id_horario
         )
@@ -109,7 +108,7 @@ def criar_horario(
 
     guardar_horarios()
 
-    logging.info("Horario %s criado com sucesso", id_horario)
+    app_logger.info("Horario %s criado com sucesso", id_horario)
 
     return 201, horario
 
@@ -121,10 +120,10 @@ def listar_horarios():
 
     carregar_horarios()
 
-    logging.info("Listagem de horarios executada")
+    app_logger.info("Listagem de horarios executada")
 
     if not horarios:
-        logging.warning("Nenhum horario encontrado")
+        app_logger.error("Nenhum horario encontrado")
         return 404, "Nenhum horario encontrado"
 
     lista = []
@@ -137,7 +136,7 @@ def listar_horarios():
             f"Disciplinas: {h['lista_disciplina']}"
         )
 
-    logging.debug("Total de horarios listados: %s", len(lista))
+    app_logger.debug("Total de horarios listados: %s", len(lista))
 
     return 200, lista
 
@@ -153,16 +152,16 @@ def atualizar_horario(
 
     carregar_horarios()
 
-    logging.info("Atualizacao do horario %s", id_horario)
+    app_logger.info("Atualizacao do horario %s", id_horario)
 
     if id_horario not in horarios:
-        logging.error("Horario %s nao encontrado", id_horario)
+        app_logger.error("Horario %s nao encontrado", id_horario)
         return 404, "Horario nao encontrado"
 
     if novas_disciplinas is not None:
 
         if not validar_lista(novas_disciplinas):
-            logging.warning(
+            app_logger.error(
                 "Lista de disciplinas invalida no horario %s",
                 id_horario
             )
@@ -173,7 +172,7 @@ def atualizar_horario(
     if novos_professores is not None:
 
         if not validar_lista(novos_professores):
-            logging.warning(
+            app_logger.error(
                 "Lista de professores invalida no horario %s",
                 id_horario
             )
@@ -183,7 +182,7 @@ def atualizar_horario(
 
     guardar_horarios()
 
-    logging.info("Horario %s atualizado com sucesso", id_horario)
+    app_logger.info("Horario %s atualizado com sucesso", id_horario)
 
     return 200, horarios[id_horario]
 
@@ -195,10 +194,10 @@ def apagar_horario(id_horario):
 
     carregar_horarios()
 
-    logging.info("Tentativa de apagar horario %s", id_horario)
+    app_logger.info("Tentativa de apagar horario %s", id_horario)
 
     if id_horario not in horarios:
-        logging.error("Horario %s nao encontrado", id_horario)
+        app_logger.error("Horario %s nao encontrado", id_horario)
         return 404, "Horario nao encontrado"
 
     removido = horarios[id_horario]
@@ -207,6 +206,6 @@ def apagar_horario(id_horario):
 
     guardar_horarios()
 
-    logging.info("Horario %s apagado com sucesso", id_horario)
+    app_logger.info("Horario %s apagado com sucesso", id_horario)
 
     return 200, removido
