@@ -1,4 +1,4 @@
-import logging
+
 import json
 import os
 
@@ -15,25 +15,25 @@ FICHEIRO_CURSOS = "cursos.json"
 # ==============================
 def guardar_cursos():
 
-    logging.debug("A guardar cursos no ficheiro JSON")
+    app_logger.debug("A guardar cursos no ficheiro JSON")
 
     try:
 
         with open(FICHEIRO_CURSOS, "w", encoding="utf-8") as ficheiro:
             json.dump(cursos, ficheiro, indent=4, ensure_ascii=False)
 
-        logging.info("Cursos guardados com sucesso")
+        app_logger.info("Cursos guardados com sucesso")
 
     except Exception as erro:
 
-        logging.error("Erro ao guardar cursos: %s", erro)
+        app_logger.error("Erro ao guardar cursos: %s", erro)
 
 
 def carregar_cursos():
 
     global cursos
 
-    logging.debug("Tentativa de carregar cursos")
+    app_logger.debug("Tentativa de carregar cursos")
 
     try:
 
@@ -42,18 +42,18 @@ def carregar_cursos():
             with open(FICHEIRO_CURSOS, "r", encoding="utf-8") as ficheiro:
                 cursos = json.load(ficheiro)
 
-            logging.info("Cursos carregados com sucesso")
-            logging.debug("Total de cursos carregados: %s", len(cursos))
+            app_logger.info("Cursos carregados com sucesso")
+            app_logger.debug("Total de cursos carregados: %s", len(cursos))
 
         else:
 
             cursos = {}
 
-            logging.warning("Ficheiro cursos.json nao existe")
+            app_logger.warning("Ficheiro cursos.json nao existe")
 
     except json.JSONDecodeError:
 
-        logging.critical("JSON de cursos corrompido")
+        app_logger.exception("JSON de cursos corrompido")
 
         cursos = {}
 
@@ -65,7 +65,7 @@ def criar_curso(id_curso, nome, descricao, duracao):
 
     carregar_cursos()
 
-    logging.debug(
+    app_logger.debug(
         "Dados recebidos: %s %s %s",
         id_curso,
         nome,
@@ -74,25 +74,25 @@ def criar_curso(id_curso, nome, descricao, duracao):
 
     if not validar_id(id_curso):
 
-        logging.warning("ID do curso invalido: %s", id_curso)
+        app_logger.error("ID do curso invalido: %s", id_curso)
 
         return 400, "ID do curso invalido"
 
     if not validar_nome(nome):
 
-        logging.warning("Nome invalido para curso %s", id_curso)
+        app_logger.error("Nome invalido para curso %s", id_curso)
 
         return 400, "Nome invalido"
 
     if not validar_duracao(duracao):
 
-        logging.warning("Duracao invalida para curso %s", id_curso)
+        app_logger.error("Duracao invalida para curso %s", id_curso)
 
         return 400, "Duracao invalida"
 
     if id_curso in cursos:
 
-        logging.error("Curso %s ja existe", id_curso)
+        app_logger.error("Curso %s ja existe", id_curso)
 
         return 409, "Curso ja existe"
 
@@ -107,7 +107,7 @@ def criar_curso(id_curso, nome, descricao, duracao):
 
     guardar_cursos()
 
-    logging.info("Curso %s criado com sucesso", id_curso)
+    app_logger.info("Curso %s criado com sucesso", id_curso)
 
     return 201, curso
 
@@ -119,11 +119,11 @@ def listar_cursos():
 
     carregar_cursos()
 
-    logging.info("Listagem de cursos executada")
+    app_logger.info("Listagem de cursos executada")
 
     if not cursos:
 
-        logging.warning("Nenhum curso encontrado")
+        app_logger.warning("Nenhum curso encontrado")
 
         return 404, "Nenhum curso encontrado"
 
@@ -137,7 +137,7 @@ def listar_cursos():
             f"Duracao: {curso['duracao']}"
         )
 
-    logging.debug("Total de cursos listados: %s", len(lista))
+    app_logger.debug("Total de cursos listados: %s", len(lista))
 
     return 200, lista
 
@@ -153,11 +153,11 @@ def atualizar_curso(
 
     carregar_cursos()
 
-    logging.info("Atualizacao do curso %s", id_curso)
+    app_logger.info("Atualizacao do curso %s", id_curso)
 
     if id_curso not in cursos:
 
-        logging.error("Curso %s nao encontrado", id_curso)
+        app_logger.error("Curso %s nao encontrado", id_curso)
 
         return 404, "Curso nao encontrado"
 
@@ -165,7 +165,7 @@ def atualizar_curso(
 
         if not validar_nome(novo_nome):
 
-            logging.warning(
+            app_logger.warning(
                 "Nome invalido para curso %s",
                 id_curso
             )
@@ -178,7 +178,7 @@ def atualizar_curso(
 
         if not validar_duracao(nova_duracao):
 
-            logging.warning(
+            app_logger.error(
                 "Duracao invalida para curso %s",
                 id_curso
             )
@@ -189,7 +189,7 @@ def atualizar_curso(
 
     guardar_cursos()
 
-    logging.info("Curso %s atualizado com sucesso", id_curso)
+    app_logger.info("Curso %s atualizado com sucesso", id_curso)
 
     return 200, cursos[id_curso]
 
@@ -201,11 +201,11 @@ def apagar_curso(id_curso):
 
     carregar_cursos()
 
-    logging.info("Tentativa de apagar curso %s", id_curso)
+    app_logger.info("Tentativa de apagar curso %s", id_curso)
 
     if id_curso not in cursos:
 
-        logging.error("Curso %s nao encontrado", id_curso)
+        app_logger.error("Curso %s nao encontrado", id_curso)
 
         return 404, "Curso nao encontrado"
 
@@ -215,6 +215,6 @@ def apagar_curso(id_curso):
 
     guardar_cursos()
 
-    logging.info("Curso %s apagado com sucesso", id_curso)
+    app_logger.info("Curso %s apagado com sucesso", id_curso)
 
     return 200, removido
